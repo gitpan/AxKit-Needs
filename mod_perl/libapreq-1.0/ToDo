@@ -1,0 +1,23 @@
+o look for 'XXX' in the source, they mark some bits of code that need work
+
+o port to apache 2.0
+
+o multipart_buffer_headers punts on headers more than 5k (which could
+  happen with a really long form input name, for example). better than
+  the old behavior of locking up, but we could be clever and actually
+  handle this.
+
+o should probably handle Apache::Request->param http://blah.com/?foo
+  like CGI.pm does (turn it into a param named "keywords")
+
+o libapreq.so ?
+
+o mmap upload files ?
+
+o port to Mac OS/X
+
+o improve/automate build process for c, dtcl (autoconf support?)
+
+o test suite ?
+
+o optional build/link of libapreq.a directly into httpd?

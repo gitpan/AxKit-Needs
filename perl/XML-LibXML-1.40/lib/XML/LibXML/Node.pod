@@ -1,0 +1,330 @@
+=head1 NAME
+
+XML::LibXML::Node - "virtual" Base Class DOM-Nodes
+
+=head1 SYNOPSIS
+
+  use XML::LibXML::Node;
+
+  $name = $node->getName();
+  $name = $node->nodeName;
+  $node->setName( $newName );
+  $bool = $node->isEqual( $other_node );
+  $content = $node->getData()
+  $content = $node->nodeValue;
+  $type = $node->getType();
+  $type = $node->nodeType;
+  $node->unbindNode()
+  $childnode = $node->removeChild( $childnode )
+  $oldnode = $node->replaceChild( $newNode, $oldNode )
+  $childnode = $node->appendChild( $childnode )
+  $newnode =$node->cloneNode( $deep )
+  $parentnode = $node->getParentNode();
+  $parentnode = $node->parentNode;
+  $nextnode = $node->getNextSibling()
+  $nextnode = $node->nextSibling()
+  $nextnode = $node->getPreviousSibling()
+  $prevnode = $node->previousSibling()
+  $boolean = $node->hasChildNodes();
+  $childnode = $node->getFirstChild()
+  $childnode = $node->firstChild;
+  $childnode = $node->getLastChild()
+  $childnode = $node->lastChild;
+  $dom = $node->getOwnerDocument()
+  $documentnode = $node->ownerDocument;
+  $node = $node->getOwner;
+  $node->setOwnerDocument( $dom );
+  $node->insertBefore( $newNode, $refNode )
+  $node->insertAfter( $newNode, $refNode )
+  @nodes = $node->findnodes( $xpath_statement );
+  $result = $node->find( $xpath );
+  print $node->findvalue( $xpath );
+  @children = $node->getChildnodes();
+  @childnodes = $node->childNodes;
+  $xmlstring = $node->toString();
+  $name = $node->getLocalName();
+  $localname = $node->localname;
+  $name = $node->getPrefix();
+  $nameprefix = $node->prefix;
+  $uri = $node->getNamespaceURI()
+  $boolean = $node->hasAttributes();
+  @attributelist = $node->getAttributes;
+  @attributelist = $node->attributes;
+  @attributelist = $node->attributesNS( $URI );
+  @nslist = $node->getNamespaces();
+  $node->iterator( \&nodehandler );
+
+=head1 DESCRIPTION
+
+LibXML::Node defines functions that are common to all Node Types.
+A LibXML::Node should never be created standalone, but as an
+instance of a high level class such as LibXML::Element or
+LibXML::Text. The class itself should provide only common
+functionality. In XML::LibXML each node is part either of a
+document or a document-fragment. Because of this there is no node
+without a parent. This may causes confusion with "unbound" nodes.
+
+=head2 Methods
+
+=over 4
+
+=item B<getName>
+
+Returns the node's
+name. This Function is aware about namesaces and returns the full
+name of the current node ( I<prefix:localname> )
+
+=item B<nodeName>
+
+Alias for B<getName()> .
+
+=item B<setName>
+
+In very limited situation it is usefull to change a nodes name. In
+the DOM specification this should throw an error. This Function is not aware about namespaces yet.
+
+=item B<isEqual>
+
+returns TRUE (1) if documents refer to the same nodestructure,
+otherwise FALSE (0) is returned.
+
+=item B<getData>
+
+If the node has any content (such as stored in a I<text
+	node> ) it can get requested through this function.
+
+=item B<nodeValue>
+
+Alias for B<getData>
+
+=item B<getType>
+
+Retrun the node's type. The possible types are described in
+the libxml2 B<tree.h> documentation. The return value of this function is a numeric value. Therefore it differst with the result
+of perl ref function.
+
+=item B<nodeType>
+
+Alias for B<getType> .
+
+=item B<unbindNode>
+
+Unbinds the Node from its siblings and Parent, but not from the
+Document it belongs to. If the node is not inserted into the DOM
+afterwards it will be lost after the programm terminated. From a low
+level view, the unbound node is stripped from the context it is and
+inserted into a (hidden) document-fragment.
+
+=item B<removeChild>
+
+This will unbind the Child Node from its parent I<$node> . The function returns the unbound node.
+If I<oldNode> is not a child of the given Node the
+function will fail.
+
+=item B<replaceChild>
+
+Replaces the I<$oldNode> with the I<$newNode> . The I<$oldNode> will be unbound from the Node. This function differs from the DOM L2 specification, in the case, if the new
+node is not part of the document, the node will be imported first.
+
+=item B<appendChild>
+
+The function will add the I<$childnode> to the end of I<$node> 's children. The function should fail, if the new
+childnode is allready a child of I<$node> . This function differs from the DOM L2 specification, in the case, if the new
+node is not part of the document, the node will be imported first.
+
+=item B<cloneNode>
+
+B<cloneNode> creates a copy of I<$node> . Wether $deep
+is set to 1 (true) the function will copy all childnodes as
+well. If $deep is 0 only the current node will be copied.
+
+=item B<getParentNode>
+
+Returns simply the Parent Node of the current node.
+
+=item B<parentNode>
+
+Alias for B<getParentNode()>
+
+=item B<getNextSibling>
+
+Returns the next sibling if any .
+
+=item B<nextSibling>
+
+Alias for B<getNextSibling()>
+
+=item B<getPreviousSibling>
+
+Analogous to B<getNextSibling> the function returns the previous
+sibling if any.
+
+=item B<previousSibling>
+
+Alias for B<getPreviousSibling()>
+
+=item B<hasChildNodes>
+
+If the current node has Childnodes this function returns TRUE (1),
+otherwise it returns FALSE (0, not undef).
+
+=item B<getFirstChild>
+
+If a node has childnodes this function will return the first
+node in the childlist.
+
+=item B<firstChild>
+
+Alias for B<getFirstChild()>
+
+=item B<getLastChild>
+
+If the I<$node> has childnodes this function returns the
+last child node.
+
+=item B<lastChild>
+
+Alias for B<getLastChild()>
+
+=item B<getOwnerDocument>
+
+Through this function it is allway possible to access the
+document the current node is bound to.
+
+=item B<ownerDocument>
+
+Alias for B<getOwnerDocument()>
+
+=item B<getOwner>
+
+This function returns the node the current node is associated
+with. In the very most cases this will be a document node or a
+document fragment node.
+
+=item B<setOwnerDocument>
+
+This function binds a node to another DOM. This method unbinds the
+node first, if it is allready bound to another document.
+
+=item B<insertBefore>
+
+The method inserts I<$newNode> before I<$refNode> . If I<$refNode> is undefined, the newNode will be set as the new
+first child of the parent node. This function differs from the
+DOM L2 specification, in the case, if the new node is not part of
+the document, the node will be imported first.
+
+=item B<insertAfter>
+
+The method inserts I<$newNode> after I<$refNode> . If I<$refNode> is undefined, the newNode will be set as the new
+last child of the parent node.
+
+=item B<findnodes>
+
+B<findnodes> performs the xpath statement on the current node and returns the result as an array. In scalar context returns a I<XML::LibXML::NodeList> object.
+
+=item B<find>
+
+B<find> performs the xpath expression using the current
+node as the context of the expression, and returns the result
+depending on what type of result the XPath expression had. For
+example, the XPath "1 * 3 + 52" results in a I<XML::LibXML::Number> object being returned. Other
+expressions might return a I<XML::LibXML::Boolean> object,
+or a I<XML::LibXML::Literal> object (a string). Each of
+those objects uses Perl's overload feature to "do the right thing"
+in different contexts.
+
+=item B<findvalue>
+
+B<findvalue> is exactly equivalent to:
+
+  
+$node->find( $xpath )->to_literal;
+
+
+That is, it returns the literal value of the results. This enables
+you to ensure that you get a string back from your search, allowing
+certain shortcuts. This could be used as the equivalent of
+<xsl:value-of select="some_xpath"/>.
+
+=item B<getChildnodes>
+
+B<getChildnodes> implements a more intuitive interface to the
+childnodes of the current node. It enables you to pass all
+children directly to a I<map> or I<grep> . If this function is called in scalar context, the number of childnodes will be returned.
+
+=item B<childNodes>
+
+Alias for B<getChildnodes()>
+
+=item B<toString>
+
+This is the equivalent to I<XML::LibXML::Document::toString> for
+a single node. This means a node and all its childnodes will be dumped into the result string. There is no formating implemented yet, which may cause an unreadable output.
+
+=item B<getLocalName>
+
+Returns the local name of a tag. This is the part behind the colon.
+
+=item B<localname>
+
+Alias for B<getLocalName()>
+
+=item B<getPrefix>
+
+Returns the prefix of a tag. This is the part before the colon.
+
+=item B<prefix>
+
+Alias for B<getPrefix()>
+
+=item B<getNamespaceURI>
+
+returns the URI of the current namespace.
+
+=item B<hasAttributes>
+
+returns 1 (TRUE) if the current node has any attributes set, otherwise
+0 (FALSE) is returned.
+
+=item B<getAttributes>
+
+returns all attribute nodes of the current node.
+
+=item B<attributes>
+
+Alias for B<getAttributes()>
+
+=item B<getAttributesNS>
+
+returns all attributes for the given namespace.
+
+=item B<getNamespaces>
+
+returns all the namespace declaration nodes bound to this node. The items
+are instances of the class XML::LibXML::Namespace.
+
+=item B<iterator>
+
+This is little helper function, that lets one define a function, that
+will be processed on the current node and all its children. The function
+will recieve as its only parameter the node to proceed. The function uses
+inorder proceeding to traverse the subtree. Therefore you can't reach the childnodes anymore, if the nodehandler removes childnodes.
+
+  
+   $node->iterator( sub { print $_[0]->nodeName(), "\n"; } );    
+
+
+The example will print all node names in the current subtree.
+The B<iterator> function will return the return value of the
+nodehandler while processing the last child of the current node.
+
+=back
+
+=head1 SEE ALSO
+
+XML::LibXML, XML::LibXML::Element, XML::LibXML::Text, XML::LibXML::Comment, XML::LibXML::Attr, XML::LibXML::DocumentFragment
+
+=head1 VERSION
+
+0.95
+

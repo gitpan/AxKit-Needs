@@ -1,0 +1,82 @@
+AxKit-Needs
+===========
+
+This module contains everything you need to install for a complete
+running AxKit system (barring AxKit itself).
+
+Assuming this is the first time you have installed AxKit, then
+this package should be the fastest way to get your system up and
+running.
+
+Installation
+============
+
+First install the C libraries expat, libxml2 and libxslt:
+
+ $ cd libs
+
+All three libraries use GNU autoconf, so for each library in the
+libs directory, simply enter the directory, and type:
+
+ $ ./configure [configure options]
+
+The configure options may need to be specified depending on your
+platform.
+
+ $ make
+ $ su
+ $ make install
+ $ exit
+
+Repeat this for all three libraries.
+
+                               ++++
+
+Next install Apache, mod_perl, and libapreq. Enter the mod_perl
+directory:
+
+ $ cd mod_perl/mod_perl-1.26
+ $ perl Makefile.PL \
+ > EVERYTHING=1 \
+ > USE_APACI=1 \
+ > DYNAMIC=1 \
+ > APACHE_PREFIX=/opt/apache \
+ > APACHE_SRC=../apache_1.3.23/src \
+ > DO_HTTPD=1 \
+ > APACI_ARGS="--enable-module=so --enable-shared=info 
+ > --enable-shared=proxy --enable-shared=rewrite 
+ > --enable-shared=log_agent"
+ $ make
+ $ su
+ $ make install
+ $ exit
+
+Now install libapreq:
+
+ $ cd libapreq-1.0
+ $ perl Makefile.PL
+ $ make
+ $ make test
+ $ su
+ $ make install
+ $ exit
+
+                               ++++
+
+Finally, install the perl modules. Enter the perl directory:
+
+ $ cd perl
+
+And for each one of the modules in there, enter the directory, and
+type:
+
+ $ perl Makefile.PL
+ $ make
+ $ make test
+ $ su
+ $ make install
+ $ exit
+
+Once you've done all of that, and assuming all the modules install
+cleanly, then you're ready to install AxKit!
+

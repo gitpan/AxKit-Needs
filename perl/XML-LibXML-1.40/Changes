@@ -1,0 +1,86 @@
+Revision history for Perl extension XML::LibXML
+
+1.40
+   - new parsefunction: $parser->parse_xml_chunk($string);
+   - appendChild( $doc_fragment ) bug fixed
+   - removed obsolete files (parser.?)
+   - fixed getElementsByTagName and getElementsByTagNameNS to fit the spec
+   - new functions in XML::LibXML::Element:
+       getChildrenByTagName
+       getChildrenByTagNameNS
+       getElementsByLocalName
+   - minor fixes and extensions of the tests
+   - more docu ;)
+   - SAX added comment and PI support
+   - SAX added start_prefix_mapping/end_prefix_mapping
+   - Fixed find() bug with no results
+   - Added use IO::Handle so FH reads work
+   - A number of segfault fixes
+   - constants added without XML_ prefix
+
+1.31
+    - Removed C-layer parser implementation.
+    - Added support for prefixes in find* functions
+    - More memory leak fixes (in custom DOMs)
+    - Allow global callbacks
+
+1.30
+    - Full PI access
+    - New parser implementation (safer)
+    - Callbacks API changed to be on the object, not the class
+    - SAX uses XML::SAX now (required)
+    - Memory leak fixes
+    - applied a bunch of patches provided by T.J. Mather
+
+1.00
+    - Added SAX serialisation
+    - Added a SAX builder module
+    - Fixed findnodes in scalar context to return a NodeList object
+    - Added findvalue($xpath)
+    - Added find(), which returns different things depending on the XPath
+    - Added Boolean, Number and Literal data types
+
+0.99
+    - Added support for $doc->URI getter/setter
+
+0.98
+    - New have_library implementation
+
+0.97
+    - Addition of Dtd string parser
+    - Added support for namespace nodes (e.g. $element->getNamespaces())
+    - Some memory leak and segfault fixes
+    - Added $doc->validate([$dtd]) which throws exceptions (augments 
+      $doc->is_valid([$dtd]))
+    - Added doc files and test files to CPAN distro
+
+0.96
+    - Addition of HTML parser
+    - getOwner method added
+    - Element->getAttributes() added
+    - Element->getAttributesNS(URI) added
+    - Documentation updates
+    - Memory leak fixes
+    - Bug Fixes
+
+0.94
+    - Some DOM Level 2 cleanups
+    - getParentNode returns XML::LibXML::Document if we get the 
+      document node
+
+0.93
+    - Addition of DOM Level 2 APIs
+    - some more segfault fixes
+    - Document is now a Node (which makes lots of things easier)
+
+0.92
+    - Many segfault and other bug fixes
+    - More DOM API methods added
+
+0.91
+    - Removed from XML::LibXSLT distribution
+    - Added DOM API (phish)
+
+0.01  Sat Mar  3 17:08:00 2001
+	- original version; created by h2xs 1.19
+

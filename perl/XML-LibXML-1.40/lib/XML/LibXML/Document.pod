@@ -1,0 +1,186 @@
+=head1 NAME
+
+XML::LibXML::Document - DOM Document Class
+
+=head1 SYNOPSIS
+
+  use XML::LibXML::Document;
+
+  $dom = XML::LibXML::Document->new( $version, $encoding );
+  $dom = XML::LibXML::Document->createDocument( $version, $encoding );
+  $strEncoding = $doc->getEncoding();
+  $strVersion = $doc->getVersion();
+  $docstring = $dom->toString([$format]);
+  $document->toStringHTML();
+  $bool = $dom->is_valid();
+  $dom->validate();
+  $root = $dom->getDocumentElement($name, $namespace );
+  $root = $dom->documentElement;
+  $dom->setDocumentElement( $root );
+  $element = $dom->createElement( $nodename );
+  $element = $dom->createElementNS( $namespaceURI, $qname );
+  $text = $dom->createTextNode( $content_text );
+  $comment = $dom->createComment( $comment_text );
+  $attrnode = $doc->createAttribute($name [,$value]);
+  $fragment = $doc->createDocumentFragment()
+  $attrnode = $doc->createAttributeNS( namespaceURI, $name [,$value] );
+  $cdata = $dom->create( $cdata_content );
+  $document->importNode( $node [, $move] );
+
+=head1 DESCRIPTION
+
+The Document Class is the result of a parsing process. But
+sometimes it is necessary to create a Document from
+scratch. The DOM Document Class provides functions that are
+conform to the DOM Core naming style.
+It inherits all functions from I<XML::LibXML::Node> as
+specified in DOM Level2. This enables to access the nodes beside
+the root element on document level - a I<DTD> for example. The
+support for these nodes is limited at the moment, so I would
+recommend, not to use I<node> functions on I<documents>.
+It is suggested that one should always create a node not bound to
+any document. There is no need of really including the node to
+the document, but once the node is bound to a document, it is
+quite safe that all strings have the correct encoding. If an
+unbound textnode with an iso encoded string is created (e.g. with
+$CLASS->new()), the I<toString> function may not return the
+expected result.
+This seems like a limitation as long UTF8 encoding is assured. If
+iso encoded strings come into play it is much safer to use the
+node creation functions of B<XML::LibXML::Document>.
+
+=head2 Methods
+
+=over 4
+
+=item B<new>
+
+alias for createDocument()
+
+=item B<createDocument>
+
+The constructor for the document class. As Parameter it takes
+the version string and (optionally) the ecoding string.
+Simply calling B<createDocument> will create the document:
+
+  
+  <?xml version="your version" encoding="your encoding"?>
+
+
+Both parameter are optional. The default value for B<$version> is I<1.0> , of course. If the B<$encoding> parameter is not set,
+the encoding will be left unset, which means UTF8 is implied (and set).
+The call of B<createDocument> without any parameter will result the
+following code:
+
+  
+  <?xml version="1.0"?>
+
+
+=item B<getEncoding>
+
+returns the encoding string of the document
+
+=item B<getVersion>
+
+returns the version string of the document
+
+=item B<toString>
+
+B<toString> is a deparsing function, so the DOM Tree can
+be translated into a string, ready for output.
+The optional B<$format> parameter sets the indenting of the output. This parameter is expected to be an I<integer> value,
+that specifies the number of linebreaks for each node.
+For more information about the formatted output check the documentation
+of I<xmlDocDumpFormatMemory> in I<libxml2/tree.h> .
+
+=item B<toStringHTML>
+
+B<toStringHTML> deparses the tree to a string as HTML. With this method indenting is automatic and managed by libxml2 internally.
+
+=item B<is_valid>
+
+Returns either TRUE or FALSE depending on the DOM Tree is a
+valid Document or not.
+You may also pass in a XML::LibXML::Dtd object, to validate
+against an external DTD:
+
+  
+  if (!$dom->is_valid($dtd)) {
+    warn("document is not valid!");
+  }
+  
+
+=item B<validate>
+
+This is an exception throwing equivalent of is_valid. If the document
+is not valid it will throw an exception containing the error. This
+allows you much better error reporting than simply is_valid or not.
+Again, you may pass in a DTD object.
+
+=item B<getDocumentElement>
+
+Returns the root element of the Document. A document can have
+just one root element to contain the documents data.
+
+=item B<doumentElement>
+
+Alias for B<getDocumentElement> .
+
+=item B<setDocumentElement>
+
+This function enables you to set the root element for a
+document. The function supports the import of a node from a
+different document tree.
+
+=item B<createElement>
+
+This function creates a new Element Node bound to the DOM with
+the name I<$nodename> .
+
+=item B<createElementNS>
+
+This function creates a new Element Node bound to the DOM with
+the name I<$nodename> and placed in the given namespace.
+
+=item B<createTextNode>
+
+As an equivalent of B<createElement> , but it creates a B<Text Node> bound to the DOM.
+
+=item B<createComment>
+
+As an equivalent of B<createElement> , but it creates a B<Comment Node> bound to the DOM.
+
+=item B<createAttribute>
+
+Creates a new Attribute node.
+
+=item B<createDocumentFragment>
+
+This function creates a DocumentFragment.
+
+=item B<createAttributeNS>
+
+Creates an Attribute bound to a namespace.
+
+=item B<createCDATASection>
+
+Similar to createTextNode and createComment, this function creates a CDataSection bound to the current DOM.
+
+=item B<importNode>
+
+If a node is not part of a document, it can be imported to another
+document. As specified in DOM Level 2 Specification the Node will
+not be altered or removed from its original document by default. ( I<$node->cloneNode(1)> will get called implicitly). Sometimes it is nessecary to I<move> a node between
+documents. In such a case the node will not be copied, but removed
+from the original document.
+
+=back
+
+=head1 SEE ALSO
+
+XML::LibXML, XML::LibXML::Element, XML::LibXML::Text, XML::LibXML::Attr, XML::LibXML::Comment, XML::LibXML::DocumentFragment
+
+=head1 VERSION
+
+0.95
+
